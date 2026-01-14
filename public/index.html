@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 Smart FIR Legal Intelligence System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-analyze {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-analyze:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-clear {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-clear:hover {
+            background: #e0e0e0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .result-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+        }
+        
+        .result-section h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .ipc-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .ipc-item:last-child {
+            border-bottom: none;
+        }
+        
+        .progress-bar {
+            width: 100px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        
+        .error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .keywords-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .keyword-tag {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 Smart FIR Legal Intelligence System</h1>
+            <p>AI-powered IPC Section Prediction and Legal Analysis</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <label for="fir-input">Enter FIR Description</label>
+                <textarea id="fir-input" placeholder="Describe the crime/incident in detail..."></textarea>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-analyze" onclick="analyzeFIR()">Analyze FIR</button>
+                <button class="btn-clear" onclick="clearResults()">Clear</button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing FIR...</p>
+            </div>
+            
+            <div class="results" id="results">
+                <div class="result-section">
+                    <h3>🔍 IPC Predictions</h3>
+                    <div id="ipc-predictions"></div>
+                </div>
+                
+                <div class="result-section">
+                    <h3>⚠️ FIR Quality Assessment</h3>
+                    <div id="quality-score"></div>
+                    <div id="warnings"></div>
+                </div>
+                
+                <div class="result-section">
+                    <h3>🧠 Key Indicators</h3>
+                    <div class="keywords-list" id="keywords"></div>
+                </div>
+                
+                <div class="result-section">
+                    <h3>📊 Severity Analysis</h3>
+                    <div id="severity"></div>
+                </div>
+                
+                <div class="result-section">
+                    <h3>⚖️ Legal Explanation</h3>
+                    <div id="explanation"></div>
+                </div>
+                
+                <div class="result-section">
+                    <h3>📜 Punishment</h3>
+                    <div id="punishment"></div>
+                </div>
+            </div>
+            
+            <div id="error" class="error" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <script>
+        async function analyzeFIR() {
+            const input = document.getElementById('fir-input').value.trim();
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+            const btn = event.target;
+            
+            error.style.display = 'none';
+            results.style.display = 'none';
+            
+            if (!input) {
+                error.textContent = 'Please enter a FIR description.';
+                error.style.display = 'block';
+                return;
+            }
+            
+            loading.style.display = 'block';
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fir_text: input })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Analysis failed');
+                }
+                
+                displayResults(data);
+                results.style.display = 'block';
+                
+            } catch (err) {
+                error.textContent = `Error: ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+        
+        function displayResults(data) {
+            // IPC Predictions
+            const ipcHtml = data.ipc_predictions.map(item => `
+                <div class="ipc-item">
+                    <strong>IPC ${item.section}</strong>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: ${item.probability * 100}%"></div>
+                    </div>
+                    <span>${(item.probability * 100).toFixed(1)}%</span>
+                </div>
+            `).join('');
+            document.getElementById('ipc-predictions').innerHTML = ipcHtml;
+            
+            // Quality Score
+            const qualityHtml = `<strong>Score: ${data.quality_score}/100</strong>`;
+            document.getElementById('quality-score').innerHTML = qualityHtml;
+            
+            // Warnings
+            const warningsHtml = data.warnings.map(w => `<div class="warning">${w}</div>`).join('');
+            document.getElementById('warnings').innerHTML = warningsHtml || '<p>✓ No warnings</p>';
+            
+            // Keywords
+            const keywordsHtml = data.keywords.map(k => `<span class="keyword-tag">${k}</span>`).join('');
+            document.getElementById('keywords').innerHTML = keywordsHtml;
+            
+            // Severity
+            document.getElementById('severity').innerHTML = `<p>${data.severity}</p>`;
+            
+            // Explanation
+            document.getElementById('explanation').innerHTML = `<p>${data.explanation}</p>`;
+            
+            // Punishment
+            document.getElementById('punishment').innerHTML = `<p>${data.punishment}</p>`;
+        }
+        
+        function clearResults() {
+            document.getElementById('fir-input').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

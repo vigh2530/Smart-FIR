@@ -1,0 +1,15 @@
+.venv/
+fir/
+__pycache__/
+*.pyc
+*.pkl
+*.csv
+.DS_Store
+.env
+*.log
+node_modules/
+.vscode/
+.idea/
+.streamlit/
+models/ipc_model.pkl
+models/tfidf_vectorizer.pkl
